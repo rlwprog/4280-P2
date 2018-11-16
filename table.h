@@ -1,9 +1,9 @@
 //
 //  table.h
 //
-//  Created by Ricky Wilson on 3/19/18.
+//  Created by Ricky Wilson on 11/11/18.
 //  CS 4280
-//  Project 1
+//  Project 2
 //
 
 #include <stdio.h>

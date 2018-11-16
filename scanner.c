@@ -66,7 +66,7 @@ int filter() {
 		} else if (checkIfNewLine(ch)){
 			column = 5;
 		} else {	
-			fprintf(stderr, "Error: %d\nUnknown character: %c\n", -1, ch);
+			printf("Error: %d\nUnknown character: %c\n", -1, ch);
 			exit(1);
 		}
 
@@ -86,6 +86,8 @@ int scanner(){
 		
 		state = FATable[state][column = filter()];
 		ch = getc(fin);
+		printf("Character(c) processed by filter: %c\n", ch);
+		printf("Character(d) processed by filter: %d\n", ch);
 
 		if (state >= 0 && state < 1000){
 			if (!checkIfWhitespace(ch) && !checkIfNewLine(ch)){	
@@ -110,6 +112,8 @@ int scanner(){
 	}
 
 	if (checkIfNewLine(ch)){
+		printf("This should be a new line: %c\n", ch);
+		printf("This should be a new line: %d\n", ch);
 		lineNum += 1;
 	}
 
