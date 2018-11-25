@@ -23,7 +23,7 @@ char buffer[100];
 
 void setUp();
 
-int filter();
+int filter(int state);
 
 int scanner();
 

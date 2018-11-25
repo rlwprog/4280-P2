@@ -18,6 +18,8 @@ void parser(FILE *fileIn) {
 		fseek(fin, -1, SEEK_CUR);
 		scanner();
 	}
+	getc(fin);
+	scanner();
 
 }
 

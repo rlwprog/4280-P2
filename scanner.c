@@ -30,7 +30,7 @@ void setUp(){
 	return;
 }
 
-int filter() {
+int filter(state) {
 		int column;
 		ch = getc(fin);
 	
@@ -58,12 +58,19 @@ int filter() {
 		} else if (checkIfDigit(ch)){
 			column = 4;
 		} else if (checkIfWhitespace(ch)){
+			while(checkIfWhitespace(ch = getc(fin))){
+			}
+			fseek(fin, -1, SEEK_CUR);
+
 			column = 5;
 		} else if (checkIfSymbol(ch)){
 			column = 0;
 		} else if (checkIfEOF(ch)){
 			column = 6;
 		} else if (checkIfNewLine(ch)){
+			if(state == 0){
+				lineNum += 1;
+			}
 			column = 5;
 		} else {	
 			printf("Error: %d\nUnknown character: %c\n", -1, ch);
@@ -84,7 +91,7 @@ int scanner(){
 	
 	while (state >= 0 && state < 1000){
 		
-		state = FATable[state][column = filter()];
+		state = FATable[state][column = filter(state)];
 		ch = getc(fin);
 		printf("Character(c) processed by filter: %c\n", ch);
 		printf("Character(d) processed by filter: %d\n", ch);
