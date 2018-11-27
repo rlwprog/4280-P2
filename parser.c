@@ -13,18 +13,15 @@
 static Token * tk;
 
 // driver to test the scanner 
-void parser(FILE *fileIn) {
+TreeNode * parser(FILE *fileIn) {
 	
 	fin = fileIn;
-	// while(getc(fin) != EOF){
-	// 	fseek(fin, -1, SEEK_CUR);
-	// 	scanner();
-	// }
-	// getc(fin);
-	// scanner();
+
+	TreeNode * root;
 
 	tk = scanner();
-	program();
+
+	root = program();
 	if (tk->tokenID == 1004){
 
 	} else {
@@ -33,30 +30,38 @@ void parser(FILE *fileIn) {
 		tokenPrint(tk);
 
 	}
-	return;
+	return root;
 }
 
-void program(){
+TreeNode * program(){
+
+	TreeNode * n = newTreenode("program");
+
 	if(strcmp(tk->tokenName, "void") == 0){
 
 		tk = scanner();
 
-		vars();
-		block();	
-		return;	
+		n->child1 = vars();
+		n->child2 = block();	
+		return n;	
 	} else {
 		printf("Error: Unsupported program, occurred in program()\n");
+		return NULL;
 	}
 }
 
-void block(){
+TreeNode * block(){
+	TreeNode * n = newTreenode("block");
 	if(strcmp(tk->tokenName, "start") == 0){
+
 		tk = scanner();
-		vars();
-		stats();
+
+		n->child1 = vars();
+		n->child2 = stats();
+
 		if(strcmp(tk->tokenName,"stop") == 0){
 			tk = scanner();
-			return;
+			return n;
 		} else {
 			printf("Error: Unsupported program, occurred in block() after start\n");
 		}
@@ -64,23 +69,29 @@ void block(){
 		printf("Error: Unsupported program, occurred in block() before start.\n");
 
 	}
+	return NULL;
 }
 
-void vars(){
+TreeNode * vars(){
+	TreeNode * n = newTreenode("vars");
 	if(strcmp(tk->tokenName,"var") == 0){
 		tk = scanner();
 	
-
 		if(tk->tokenID == 1000){
+			tokenPrint(tk);
+			n->head = listInsert(n->head, tk);
+
 			tk = scanner();
 
 			if(strcmp(tk->tokenName, ":") == 0){
 				tk = scanner();
 
 				if(tk->tokenID == 1001){
+					n->head = listInsert(n->head, tk);
+
 					tk = scanner();
-					vars();
-					return;
+					n->child1 = vars();
+					return n;
 				} else {
 					printf("Error: Unsupported program, occurred in vars() after ':'\n");
 				}
@@ -90,132 +101,152 @@ void vars(){
 		} else {
 			printf("Error: Unsupported program, occurred in vars() after Keyword\n");
 		}
-	} else {
-		return;
-	}
-}
-
-void expr(){
-	A();
-	if((strcmp(tk->tokenName, "/") == 0) || (strcmp(tk->tokenName, "*") == 0)){
-		tk = scanner();
-		expr();
-		return;
-	} else {
-		return;
-	}
-}
-
-void A(){
-	M();
-	if((strcmp(tk->tokenName, "+") == 0) || (strcmp(tk->tokenName, "-") == 0)){
-		tk = scanner();
-		A();
-		return;
-	} else {
-		return;
-	}
-}
-
-void M(){
-	if(strcmp(tk->tokenName,"-") == 0){
-		tk = scanner();
-		M();
-		return;
-	} else {
-		R();
-		return;
 	} 
+	return n;
 }
 
-void R(){
+TreeNode * expr(){
+	TreeNode * n = newTreenode("expr");
+	n->child1 = A();
+	if((strcmp(tk->tokenName, "/") == 0) || (strcmp(tk->tokenName, "*") == 0)){
+		n->head = listInsert(n->head, tk);
+		tk = scanner();
+		n->child1 = expr();
+	} 
+	return n;
+}
+
+TreeNode * A(){
+	TreeNode * n = newTreenode("A");
+	n->child1 = M();
+	if((strcmp(tk->tokenName, "+") == 0) || (strcmp(tk->tokenName, "-") == 0)){
+		n->head = listInsert(n->head, tk);
+		tk = scanner();
+
+		n->child2 = A();
+		return n;
+	} 
+	return n;
+}
+
+TreeNode * M(){
+	TreeNode * n = newTreenode("M");
+	if(strcmp(tk->tokenName,"-") == 0){
+		n->head = listInsert(n->head, tk);
+		tk = scanner();
+
+		n->child1 = M();
+	} else {
+		n->child1 = R();
+	} 
+	return n;
+}
+
+TreeNode * R(){
+	TreeNode * n = newTreenode("R");
 	if(strcmp(tk->tokenName,"(") == 0){
 		tk = scanner();
-		expr();
+		n->child1 = expr();
 
 		if(strcmp(tk->tokenName,")") == 0){
 			tk = scanner();
 
-			return;
+			return n;
 		} else {
 			printf("Error: Unsupported program, occurred in R() after '('\n");	
+			return NULL;
 		}
 	} else if (tk->tokenID == 1000){
+		n->head = listInsert(n->head, tk);
 		tk = scanner();
-		return;
+		return n;
 	} else if (tk->tokenID == 1001){
+		n->head = listInsert(n->head, tk);
 		tk = scanner();
-		return;
-	} else {
-		printf("Error: Unsupported program, occurred in R() after ')'\n");			
+		return n;
+	} else {		
+		fprintf(stderr, "Parsing error: Unsupported program, occurred in R() after ')'\n");
+		exit(1);
 	}
+	return n;
 }
 
-void stats(){
-	stat();
-	mStat();
+TreeNode * stats(){
+	TreeNode * n = newTreenode("stats");
+	n->child1 = stat();
+	n->child2 = mStat();
+	return n;
 }
 
-void mStat(){
+TreeNode * mStat(){
+	TreeNode * n = newTreenode("mStat");
 	if(strcmp(tk->tokenName, "scan") == 0 || strcmp(tk->tokenName, "out") == 0 || strcmp(tk->tokenName, "start") == 0 || strcmp(tk->tokenName, "if") == 0 || strcmp(tk->tokenName, "loop") == 0 || strcmp(tk->tokenName, "let") == 0){
-		stat();
-		mStat();
-		return;
+		n->child1 = stat();
+		n->child2 = mStat();
+		return n;
 	} else {
-		return;
+		return NULL;
 	}
 }
 
-void stat(){
+TreeNode * stat(){
+	TreeNode * n = newTreenode("stat");
 	if(strcmp(tk->tokenName, "scan") == 0){
-		in();
-		return;
+		n->child1 = in();
+		return n;
 	} else if(strcmp(tk->tokenName, "out") == 0){
-		out();
-		return;
+		n->child1 = out();
+		return n;
 	} else if(strcmp(tk->tokenName, "start") == 0){
-		block();
-		return;
+		n->child1 = block();
+		return n;
 	} else if(strcmp(tk->tokenName, "if") == 0){
-		If();
-		return;
+		n->child1 = If();
+		return n;
 	} else if(strcmp(tk->tokenName, "loop") == 0){
-		loop();
-		return;
+		n->child1 = loop();
+		return n;
 	} else if (strcmp(tk->tokenName, "let") == 0){
-		assign();
-		return;
+		n->child1 = assign();
+		return n;
 	} else {
 		printf("Error: Unsupported program, occurred in stat()\n");
+		return NULL;
 	}
 }
 
-void in(){
+TreeNode * in(){
+	TreeNode * n = newTreenode("in");
 	tk = scanner();
-	if(strcmp(tk->tokenName, "Identifier") == 0){
+	if(tk->tokenID == 1000){
+		n->head = listInsert(n->head, tk);
+
 		tk = scanner();
 		if(strcmp(tk->tokenName, ".") == 0){
 			tk = scanner();
-			return;
+			return n;
 		}
 	} else {
 		printf("Error: Unsupported program, occurred in in() after 'scan'\n");
-
 	}
+	return NULL;
 }
 
-void out(){
+TreeNode * out(){
+	TreeNode * n = newTreenode("out");
 	tk = scanner();
 	if(strcmp(tk->tokenName, "[") == 0){
 		tk = scanner();
-		expr();
+
+		tokenPrint(tk);
+		n->child1 = expr();
 
 		if(strcmp(tk->tokenName, "]") == 0){
 			tk = scanner();
 
 			if(strcmp(tk->tokenName, ".") == 0){
 				tk = scanner();
-				return;
+				return n;
 			} else {
 				printf("Error: Unsupported program, occurred in out() after ']'\n");
 			}
@@ -225,60 +256,70 @@ void out(){
 	} else {
 		printf("Error: Unsupported program, ocurred in out() before '['\n");
 	}
+	return NULL;
 }
 
-void If(){
+TreeNode * If(){
+	TreeNode * n = newTreenode("if");
 	tk = scanner();
 	if(strcmp(tk->tokenName, "(") == 0){
 		tk = scanner();
-		expr();
-		RO();
-		expr();
+		n->child1 = expr();
+		n->child2 = RO();
+		n->child3 = expr();
 
 		if(strcmp(tk->tokenName, ")") == 0){
 			tk = scanner();
-			stat();
-			return;
+			n->child4 = stat();
+			return n;
 		} else {
 			printf("Error: Unsupported program, ocurred in If() after '('\n");
 		}
 	} else {
 		printf("Error: Unsupported program, ocurred in If() before '('\n");
 	}
+	return NULL;
 }
 
-void loop(){
+TreeNode * loop(){
+	TreeNode * n = newTreenode("loop");
 	tk = scanner();
 	if(strcmp(tk->tokenName, "(") == 0){
 		tk = scanner();
-		expr();
-		RO();
-		expr();
+
+		n->child1 = expr();
+		n->child2 = RO();
+		n->child3 = expr();
 
 		if(strcmp(tk->tokenName, ")") == 0){
 			tk = scanner();
-			stat();
-			return;
+
+			n->child4 = stat();
+			return n;
 		} else {
 			printf("Error: Unsupported program, ocurred in loop() after '('\n");
 		}
 	} else {
 		printf("Error: Unsupported program, ocurred in loop() before '('\n");
 	}
+	return NULL;
 }
 
-void assign(){
+TreeNode * assign(){
+	TreeNode * n = newTreenode("assign");
 	tk = scanner();
 	if(tk->tokenID == 1000){
+		n->head = listInsert(n->head, tk);
 		tk = scanner();
 
 		if(strcmp(tk->tokenName, "=") == 0){
+			n->head = listInsert(n->head, tk);
 			tk = scanner();
-			expr();
+			n->child1 = expr();
 
 			if(strcmp(tk->tokenName, ".") == 0){
 				tk = scanner();
-				return;
+				return n;
 			} else {
 				printf("Error: Unsupported program, ocurred in assign() before '.'\n");
 			}
@@ -288,39 +329,54 @@ void assign(){
 	} else {
 		printf("Error: Unsupported program, occurred in assign() before 'Identifier'\n");
 	}
+	return NULL;
 }
 
-void RO(){
+TreeNode * RO(){
+	TreeNode * n = newTreenode("RO");
 	if(strcmp(tk->tokenName, "<") == 0){
+		n->head = listInsert(n->head, tk);
+		
 		tk = scanner();
 
 		if(strcmp(tk->tokenName, "=") == 0){
+			n->head = listInsert(n->head, tk);
+
 			tk = scanner();
-			return;
+			return n;
 		} else {
-			return;
+			return n;
 		}
 	} else if (strcmp(tk->tokenName, ">") == 0){
+		n->head = listInsert(n->head, tk);
+
 		tk = scanner();
 
 		if(strcmp(tk->tokenName, "=") == 0){
+			n->head = listInsert(n->head, tk);
+
 			tk = scanner();
-			return;
+			return n;
 		} else {
-			return;
+			return n;
 		}
 	} else if(strcmp(tk->tokenName, "=") == 0){
+		n->head = listInsert(n->head, tk);
+
 		tk = scanner();
 
 		if(strcmp(tk->tokenName, "=") == 0){
+			n->head = listInsert(n->head, tk);
+
 			tk = scanner();
-			return;
+			return n;
 		} else {
-			return;
+			return n;
 		}
 	} else {
 		printf("Error: Unsupported program, occurred in RO()\n");
 	}
+	return NULL;
 }
 
 

@@ -24,12 +24,24 @@ Token * tokenConstruct(int tokenID, char *tokenName, int line)
 
 void tokenPrint(Token *tok)
 {
-	printf("\nToken Type: %s\n", tokenNames[tok ->tokenID%1000]);
+	printf("%s: ", tokenNames[tok ->tokenID%1000]);
 	if(tok -> tokenID == 1004){
-		printf("Token Name: EOF\n");
+		printf("EOF\n");
 
 	} else {
-	printf("Token Name: %s\n", tok -> tokenName);
+	printf("%s\n", tok -> tokenName);
 	}
-	printf("Line Number: %d\n\n", tok -> line);
 }
+
+// void tokenPrint(Token *tok)
+// {
+// 	printf("\nToken Type: %s\n", tokenNames[tok ->tokenID%1000]);
+// 	if(tok -> tokenID == 1004){
+// 		printf("Token Name: EOF\n");
+
+// 	} else {
+// 	printf("Token Name: %s\n", tok -> tokenName);
+// 	}
+// 	printf("Line Number: %d\n\n", tok -> line);
+// }
+

@@ -10,7 +10,7 @@
 all: scanner 
 
 scanner: 
-	gcc -Wall token.c main.c parser.c scanner.c -o scanner
+	gcc -Wall tree.c node.c token.c main.c parser.c scanner.c -o scanner
 
 clean:
 	rm scanner  

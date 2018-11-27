@@ -6,6 +6,9 @@
 //  Project 2
 //
 
+#ifndef FILE_TOKENH_SEEN
+#define FILE_TOKENH_SEEN
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,9 +27,9 @@ typedef struct token
 
 } Token;
 
-
-
 Token * tokenConstruct(int tokenID, char *tokenName, int line);
 
 void tokenPrint(Token *tok);
 
+
+#endif

@@ -1,30 +1,32 @@
 //
 //  node.h
 //
-//  Created by Ricky Wilson on 11/11/18.
+//  Created by Ricky Wilson on 11/10/18.
+//
 //  CS 4280
 //  Project 2
-//
+//  Dr. Janikow
 
 #include <stdbool.h>
+#include "token.h"
 
 //structure for a node in the linked list containing the strings within the bst
 typedef struct node
 {
-    char *str;
+    Token *tok;
     struct node *next;
 
 } Node;
 
 // constructs a node in the linked list
-Node * nodeConstruct(char *str);
+Node * nodeConstruct(Token * tok);
 
 //inserts a new node into the linked list
-Node * listInsert(Node *head, char *str);
+Node * listInsert(Node *head, Token *tok);
 
-// searches the linked list for a particular string and returns true if there, false if not
-bool listSearch(Node *head, char *str);
+// // searches the linked list for a particular string and returns true if there, false if not
+// bool listSearch(Node *head, char *str);
 
 // prints the linked list in order from latest to oldest
-void listPrint(Node *head, FILE * fout);
+void listPrint(Node *head);
 

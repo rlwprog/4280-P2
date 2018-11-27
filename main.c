@@ -16,6 +16,8 @@
 
 int main(int argc, char *argv[]){
 	
+	TreeNode * root;
+
 	// make sure there are only zero or one arguments 
 	if (argc > 2) {
 		errno = 8;
@@ -39,7 +41,11 @@ int main(int argc, char *argv[]){
 
 	} 
 
-	parser(fp);
+	root = parser(fp);
+
+	printf("Printing tree:\n");
+
+	traversePreorder(0, root);
 
 	// close the input file
 	fclose(fp);

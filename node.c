@@ -1,10 +1,12 @@
 //
-//  parser.c
+//  node.c
 //
-//  Created by Ricky Wilson on 11/11/18.
+//  Created by Ricky Wilson on 9/25/18.
+//
 //  CS 4280
-//  Project 2
-//
+//  Project 0
+//  Dr. Janikow
+
 
 #include <string.h>
 #include <stdlib.h>
@@ -12,45 +14,49 @@
 #include <stdbool.h>
 #include "node.h"
 
-Node * nodeConstruct(char *newStr) 
+Node * nodeConstruct(Token * tok) 
 {
 	// allocates memory for both a Node's size as well as the input string
 	Node * nd = malloc(sizeof(Node));
-	nd -> str = malloc(strlen(newStr) + 1);
-	
-	strcpy(nd -> str, newStr);
+	nd->tok = malloc(sizeof(Token));
+	nd->tok = tok;
 	nd -> next = NULL;
 	
 	return nd;
 }
 
-Node * listInsert(Node * head, char *str) 
+Node * listInsert(Node * head, Token *tok) 
 {
-	
-	Node * ptr = nodeConstruct(str);
-	ptr -> next = head;
-	return ptr;
-
-}
-
-bool listSearch(Node *head, char *str) 
-{
-	Node * ptr = head;
-	while (ptr != NULL) {
-		if (strcmp(str, ptr->str) == 0){
-			return true;
-		}
-		ptr = ptr->next;
+	if(head == NULL){
+		
+		head = nodeConstruct(tok);
+	} else {
+		Node * ptr = nodeConstruct(tok);
+		head->next = ptr;
 	}
-	return false;
+
+	return head;
+
 }
 
-void listPrint(Node *head, FILE * fout)
+// bool listSearch(Node *head, char *str) 
+// {
+// 	Node * ptr = head;
+// 	while (ptr != NULL) {
+// 		if (strcmp(str, ptr->str) == 0){
+// 			return true;
+// 		}
+// 		ptr = ptr->next;
+// 	}
+// 	return false;
+// }
+
+void listPrint(Node *head)
 {
 	Node * current = head;
 
     while (current != NULL) {
-    	fprintf(fout, "%s ", current->str);
+    	tokenPrint(current->tok);
     	current = current -> next;
     }
 }

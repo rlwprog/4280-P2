@@ -9,23 +9,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "tree.h"
 #include "scanner.h"
 
-void parser(FILE *fileIn);
-
-void program();
-void block();
-void vars();
-void expr();
-void A();
-void M();
-void R();
-void stats();
-void mStat();
-void stat();
-void in();
-void out();
-void If();
-void loop();
-void assign();
-void RO();
+TreeNode * parser(FILE *fileIn);
+TreeNode * program();
+TreeNode * block();
+TreeNode * vars();
+TreeNode * expr();
+TreeNode * A();
+TreeNode * M();
+TreeNode * R();
+TreeNode * stats();
+TreeNode * mStat();
+TreeNode * stat();
+TreeNode * in();
+TreeNode * out();
+TreeNode * If();
+TreeNode * loop();
+TreeNode * assign();
+TreeNode * RO();

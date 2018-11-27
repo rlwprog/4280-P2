@@ -112,7 +112,7 @@ Token * scanner(){
 			state = checkIfIdentifierIsKeyword(tokn);
 		}
 		tok = tokenConstruct(state, tokn, lineNum);
-		tokenPrint(tok);
+		// tokenPrint(tok);
 	}
 	if (state == -2){
 		fprintf(stderr, "Error: %d\nCan't begin ID with: %c\n", state, ch);
