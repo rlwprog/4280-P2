@@ -1,5 +1,5 @@
-void 
-var x : 1 
-start 
-  out [ 1 ] . 
-stop
+void   
+var x : 1
+start       
+  out [ 1 ] .   
+stop 

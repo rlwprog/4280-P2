@@ -25,7 +25,7 @@ void setUp();
 
 int filter(int state);
 
-int scanner();
+Token * scanner();
 
 int checkIfDigit(char ch);
 

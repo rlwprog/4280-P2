@@ -60,8 +60,9 @@ int filter(state) {
 		} else if (checkIfWhitespace(ch)){
 			while(checkIfWhitespace(ch = getc(fin))){
 			}
-			fseek(fin, -1, SEEK_CUR);
-
+			if (state != 0){
+				fseek(fin, -1, SEEK_CUR);
+			}
 			column = 5;
 		} else if (checkIfSymbol(ch)){
 			column = 0;
@@ -81,8 +82,9 @@ int filter(state) {
 	return column;
 }
 
-int scanner(){
+Token * scanner(){
 	
+	Token * tok = NULL;
 	char tokn[9] = "";
 	int tokenIndex = 0;
 	int state = 0;
@@ -93,8 +95,8 @@ int scanner(){
 		
 		state = FATable[state][column = filter(state)];
 		ch = getc(fin);
-		printf("Character(c) processed by filter: %c\n", ch);
-		printf("Character(d) processed by filter: %d\n", ch);
+		// printf("Character(c) processed by filter: %c\n", ch);
+		// printf("Character(d) processed by filter: %d\n", ch);
 
 		if (state >= 0 && state < 1000){
 			if (!checkIfWhitespace(ch) && !checkIfNewLine(ch)){	
@@ -109,7 +111,6 @@ int scanner(){
 		if(state == 1000){
 			state = checkIfIdentifierIsKeyword(tokn);
 		}
-		Token * tok = NULL;
 		tok = tokenConstruct(state, tokn, lineNum);
 		tokenPrint(tok);
 	}
@@ -119,19 +120,19 @@ int scanner(){
 	}
 
 	if (checkIfNewLine(ch)){
-		printf("This should be a new line: %c\n", ch);
-		printf("This should be a new line: %d\n", ch);
+		// printf("This should be a new line: %c\n", ch);
+		// printf("This should be a new line: %d\n", ch);
 		lineNum += 1;
 	}
 
 	if (checkIfEOF(ch)){
 		Token * tok = NULL;
 		tok = tokenConstruct(1004, tokn, -1);
-		tokenPrint(tok);
+		// tokenPrint(tok);
 
 	}
 
-	return 0;
+	return tok;
 
 }
 

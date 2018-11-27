@@ -14,3 +14,18 @@
 void parser(FILE *fileIn);
 
 void program();
+void block();
+void vars();
+void expr();
+void A();
+void M();
+void R();
+void stats();
+void mStat();
+void stat();
+void in();
+void out();
+void If();
+void loop();
+void assign();
+void RO();
