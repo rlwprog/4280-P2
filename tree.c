@@ -33,15 +33,20 @@ TreeNode *newTreenode(char *label)
 // A utility function to do inorder traversal of BST
 void traversePreorder(int lvl, TreeNode *root)
 {
+    int i;
 
     if (root != NULL)
     {
-        printf("\n%s ", root->label);
-        int i;
         for (i = 0; i < lvl; i++){
-            printf("\t");
-        }           
+            printf("  ");
+
+        }  
+        printf("%s ", root->label);
+        // for (i = 0; i < lvl; i++){
+        //     printf("\t");
+        // }           
         listPrint(root->head);
+        printf("\n");
 
         traversePreorder(lvl + 1, root->child1);
         traversePreorder(lvl + 1, root->child2);

@@ -26,10 +26,10 @@ void tokenPrint(Token *tok)
 {
 	printf("%s: ", tokenNames[tok ->tokenID%1000]);
 	if(tok -> tokenID == 1004){
-		printf("EOF\n");
+		printf("EOF \n");
 
 	} else {
-	printf("%s\n", tok -> tokenName);
+	printf("%s ", tok -> tokenName);
 	}
 }
 

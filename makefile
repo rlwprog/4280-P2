@@ -7,10 +7,10 @@
 #
 
 
-all: scanner 
+all: parser 
 
-scanner: 
-	gcc -Wall tree.c node.c token.c main.c parser.c scanner.c -o scanner
+parser: 
+	gcc -Wall tree.c node.c token.c main.c parser.c scanner.c -o parser
 
 clean:
-	rm scanner  
+	rm parser  

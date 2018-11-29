@@ -1,0 +1,5 @@
+void
+start
+  out [ 1 ] .
+stop
+out [ 1 ] .
