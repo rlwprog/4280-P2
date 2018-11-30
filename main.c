@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 
 	printf("Printing tree:\n");
 
-	traversePreorder(0, root);
+	printTree(0, root);
 
 	// close the input file
 	fclose(fp);

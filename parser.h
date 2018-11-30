@@ -8,8 +8,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "tree.h"
+#include "testtree.h"
 #include "scanner.h"
 
 TreeNode * parser(FILE *fileIn);

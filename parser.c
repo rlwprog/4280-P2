@@ -27,8 +27,8 @@ TreeNode * parser(FILE *fileIn) {
 	} else {
 
 		printf("Error: %d Program didn't end correctly with EOF\n", -4);
-		tokenPrint(tk);
-
+		exit(0);
+		
 	}
 	return root;
 }
@@ -46,7 +46,7 @@ TreeNode * program(){
 		return n;	
 	} else {
 		printf("Error: Unsupported program, occurred in program()\n");
-		return NULL;
+		exit(0);
 	}
 }
 
@@ -64,9 +64,11 @@ TreeNode * block(){
 			return n;
 		} else {
 			printf("Error: Unsupported program, occurred in block() after start\n");
+			exit(0);
 		}
 	} else {
 		printf("Error: Unsupported program, occurred in block() before start.\n");
+		exit(0);
 
 	}
 	return NULL;
@@ -78,7 +80,6 @@ TreeNode * vars(){
 		tk = scanner();
 	
 		if(tk->tokenID == 1000){
-			tokenPrint(tk);
 			n->head = listInsert(n->head, tk);
 
 			tk = scanner();
@@ -94,12 +95,15 @@ TreeNode * vars(){
 					return n;
 				} else {
 					printf("Error: Unsupported program, occurred in vars() after ':'\n");
+					exit(0);
 				}
 			} else {
 				printf("Error: Unsupported program, occurred in vars() after Identifier\n");
+				exit(0);
 			}
 		} else {
 			printf("Error: Unsupported program, occurred in vars() after Keyword\n");
+			exit(0);
 		}
 	} 
 	return n;
@@ -154,7 +158,7 @@ TreeNode * R(){
 			return n;
 		} else {
 			printf("Error: Unsupported program, occurred in R() after '('\n");	
-			return NULL;
+			exit(0);
 		}
 	} else if (tk->tokenID == 1000){
 		n->head = listInsert(n->head, tk);
@@ -166,7 +170,7 @@ TreeNode * R(){
 		return n;
 	} else {		
 		fprintf(stderr, "Parsing error: Unsupported program, occurred in R() after ')'\n");
-		exit(1);
+		exit(0);
 	}
 	return n;
 }
@@ -211,6 +215,7 @@ TreeNode * stat(){
 		return n;
 	} else {
 		printf("Error: Unsupported program, occurred in stat()\n");
+		exit(0);
 		return NULL;
 	}
 }
@@ -228,6 +233,7 @@ TreeNode * in(){
 		}
 	} else {
 		printf("Error: Unsupported program, occurred in in() after 'scan'\n");
+		exit(0);
 	}
 	return NULL;
 }
@@ -238,7 +244,6 @@ TreeNode * out(){
 	if(strcmp(tk->tokenName, "[") == 0){
 		tk = scanner();
 
-		tokenPrint(tk);
 		n->child1 = expr();
 
 		if(strcmp(tk->tokenName, "]") == 0){
@@ -249,12 +254,15 @@ TreeNode * out(){
 				return n;
 			} else {
 				printf("Error: Unsupported program, occurred in out() after ']'\n");
+				exit(0);
 			}
 		} else {
 			printf("Error: Unsupported program, occurred in out() after '['\n");
+			exit(0);
 		}
 	} else {
 		printf("Error: Unsupported program, ocurred in out() before '['\n");
+		exit(0);
 	}
 	return NULL;
 }
@@ -274,9 +282,11 @@ TreeNode * If(){
 			return n;
 		} else {
 			printf("Error: Unsupported program, ocurred in If() after '('\n");
+			exit(0);
 		}
 	} else {
 		printf("Error: Unsupported program, ocurred in If() before '('\n");
+		exit(0);
 	}
 	return NULL;
 }
@@ -298,9 +308,11 @@ TreeNode * loop(){
 			return n;
 		} else {
 			printf("Error: Unsupported program, ocurred in loop() after '('\n");
+			exit(0);
 		}
 	} else {
 		printf("Error: Unsupported program, ocurred in loop() before '('\n");
+		exit(0);
 	}
 	return NULL;
 }
@@ -322,12 +334,15 @@ TreeNode * assign(){
 				return n;
 			} else {
 				printf("Error: Unsupported program, ocurred in assign() before '.'\n");
+				exit(0);
 			}
 		} else {
 			printf("Error: Unsupported program, occurred in assign() after 'Identifier'\n");
+			exit(0);
 		}
 	} else {
 		printf("Error: Unsupported program, occurred in assign() before 'Identifier'\n");
+		exit(0);
 	}
 	return NULL;
 }
@@ -375,6 +390,7 @@ TreeNode * RO(){
 		}
 	} else {
 		printf("Error: Unsupported program, occurred in RO()\n");
+		exit(0);
 	}
 	return NULL;
 }
